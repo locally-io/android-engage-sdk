@@ -30,7 +30,7 @@ object BeaconScanner: IBeaconListener {
         proximityManager = ProximityManagerFactory.create(context)
         proximityManager.setIBeaconListener(this)
         proximityManager.configuration()
-                .scanMode(ScanMode.LOW_POWER)
+                .scanMode(ScanMode.BALANCED)
                 .scanPeriod(ScanPeriod.MONITORING)
     }
 
@@ -63,6 +63,7 @@ object BeaconScanner: IBeaconListener {
                             NEAR -> Proximity.NEAR
                             FAR -> Proximity.FAR
                             UNKNOWN -> Proximity.FAR
+                            else -> Proximity.FAR
                         }
 
                 Beacon(BEACON, proximity, iBeacon.major, iBeacon.minor)
