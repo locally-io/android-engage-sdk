@@ -1,10 +1,13 @@
 package io.locally.engagesdk
 
+import android.location.Location
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import io.locally.engagesdk.common.Utils
 import io.locally.engagesdk.datamodels.campaign.Campaign
-import io.locally.engagesdk.datamodels.impression.*
+import io.locally.engagesdk.datamodels.impression.ImpressionBeacon
+import io.locally.engagesdk.datamodels.impression.ImpressionType
+import io.locally.engagesdk.datamodels.impression.Proximity
 import io.locally.engagesdk.network.services.campaign.CampaignAPI
 import io.locally.engagesdk.network.support.BASE
 import org.junit.Before
@@ -49,12 +52,7 @@ class BeaconImpressionTest {
                                 major = 2,
                                 minorDec = 414,
                                 location =
-                                Location(longitude = -118.3165097809,
-                                        latitude = 33.8806158172,
-                                        altitude = 3.0,
-                                        speed = -1.0,
-                                        horizontal = 8.0,
-                                        vertical = 3.0)))
+                                Location("GPS")))
                 .test()
                 .assertTerminated()
                 .assertComplete()
@@ -73,12 +71,7 @@ class BeaconImpressionTest {
                                 major = 2,
                                 minorDec = 414,
                                 location =
-                                Location(longitude = -118.3165097809,
-                                        latitude = 33.8806158172,
-                                        altitude = 3.0,
-                                        speed = -1.0,
-                                        horizontal = 8.0,
-                                        vertical = 3.0)))
+                                Location("GPS")))
                 .test()
                 .assertTerminated()
                 .assertComplete()

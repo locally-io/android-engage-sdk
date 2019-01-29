@@ -1,12 +1,12 @@
 package io.locally.engagesdk
 
+import android.location.Location
 import android.support.test.InstrumentationRegistry
 import io.locally.engagesdk.common.Utils
 import io.locally.engagesdk.datamodels.campaign.Campaign
 import io.locally.engagesdk.datamodels.campaign.Campaign.Data
 import io.locally.engagesdk.datamodels.impression.ImpressionGeofence
 import io.locally.engagesdk.datamodels.impression.ImpressionType.GEOFENCE
-import io.locally.engagesdk.datamodels.impression.Location
 import io.locally.engagesdk.datamodels.impression.Proximity.FAR
 import io.locally.engagesdk.network.services.geofences.GeofenceAPI
 import io.locally.engagesdk.network.support.BASE
@@ -25,7 +25,6 @@ class GeofenceImpressionTest {
     lateinit var retrofit: Retrofit
     lateinit var mock: MockRetrofit
 
-    lateinit var location: Location
     lateinit var impression: ImpressionGeofence
     lateinit var campaign: Campaign
 
@@ -42,8 +41,7 @@ class GeofenceImpressionTest {
         mock = MockRetrofit.Builder(retrofit).networkBehavior(behavior).build()
         geofences = mock.create(GeofenceAPI::class.java)
 
-        location = Location(27.4988, -109.938, 0.0, 0.0, 0.0, 0.0)
-        impression = ImpressionGeofence(true, GEOFENCE, FAR, location)
+        impression = ImpressionGeofence(true, GEOFENCE, FAR, Location("GPS"))
         campaign = Campaign(Data(1, 1, 1, 1, null, "", 1))
     }
 

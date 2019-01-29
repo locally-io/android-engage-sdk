@@ -3,6 +3,7 @@ package io.locally.engagesdk
 import android.support.test.runner.AndroidJUnit4
 import io.locally.engagesdk.datamodels.authentication.LoginRequest
 import io.locally.engagesdk.datamodels.authentication.LoginResponse
+import io.locally.engagesdk.datamodels.authentication.LoginResponse.*
 import io.locally.engagesdk.datamodels.authentication.RefreshTokenRequest
 import io.locally.engagesdk.network.services.authentication.AuthenticationAPI
 import io.locally.engagesdk.network.support.BASE
@@ -35,7 +36,7 @@ class LoginTest {
 
     @Test
     fun testLoginSucceed() {
-        authentication.returningResponse(LoginResponse(data = LoginResponse.Data()))
+        authentication.returningResponse(LoginResponse())
                 .login(LoginRequest(username = "", password = "", deviceId = ""))
                 .test()
                 .assertTerminated()
@@ -57,7 +58,7 @@ class LoginTest {
 
     @Test
     fun refreshSucceed(){
-        authentication.returningResponse(LoginResponse(data = LoginResponse.Data()))
+        authentication.returningResponse(LoginResponse(data = Data("token", "refresh", "guid-number", "kontaktKey", AWS(pool = "poolId"))))
                 .refresh(RefreshTokenRequest(refresh = "", deviceId = ""))
                 .test()
                 .assertTerminated()
