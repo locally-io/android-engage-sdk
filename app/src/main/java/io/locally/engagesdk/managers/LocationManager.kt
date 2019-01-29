@@ -13,6 +13,8 @@ import android.support.v4.content.ContextCompat
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
+import io.locally.engagesdk.common.FAST_INTERVAL
+import io.locally.engagesdk.common.INTERVAL
 
 class LocationManager(private val context: Context): LocationCallback() {
 
@@ -52,8 +54,8 @@ class LocationManager(private val context: Context): LocationCallback() {
     @SuppressLint("MissingPermission")
     private fun locationUpdates(){
         val locationRequest = LocationRequest().apply {
-            interval = 5000
-            fastestInterval = 1000
+            interval = INTERVAL
+            fastestInterval = FAST_INTERVAL
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         }
 
