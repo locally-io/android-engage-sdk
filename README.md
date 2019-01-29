@@ -15,7 +15,7 @@ This document contains the first steps to integrate EngageSDK to your applicatio
 
 ```groovy
         //library
-        implementation 'io.locally:sdk:1.0.0'
+        implementation 'io.locally:engage-sdk:1.0.0'
         //Locations
         implementation 'com.google.android.gms:play-services-location:15.0.1'
         implementation 'com.google.android.gms:play-services-ads:15.0.1'
@@ -86,6 +86,36 @@ This document contains the first steps to integrate EngageSDK to your applicatio
         private fun stopMonitoring(){
             EngageSDK.stopMonitoringBeacons() 
             EngageSDK.stopMonitoringGeofences() 
+        }
+```
+
+- **Handling Content**
+
+    In order to handle content received you need to implement the interface **CampaignListener** which contains the method _didCampaignArrived(intent: Intent)_.
+
+```Java
+        class MainActivity : AppCompatActivity() {             
+            fun handleCampaignContent() {
+                EngageSDK.setListener(object: EngageSDK.CampaignListener {
+                    override fun didCampaignArrived(intent: Intent) {
+                        //Handle content
+                        getContent(intent)
+                    }
+                })
+            }
+        }
+```
+>You can just launch the value `intent` to display the content, otherwise you can get it like the following:
+
+>Content comes in *JSON* format but it can easly be transformed to object
+    
+```Java
+        private fun getContent(intent: Intent){
+            val json = intent.getStringExtra(CAMPAIGN_CONTENT)
+            val content = Gson().fromJson(json, CampaignContent::class.java)
+            
+            System.out.println(content.headerTitle)
+            System.out.println(content.notificationMessage)
         }
 ```
     
