@@ -2,6 +2,7 @@ package io.locally.engagesdk
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import io.locally.engagesdk.beacons.BeaconsMonitor
 import io.locally.engagesdk.campaigns.CampaignCoordinator
 import io.locally.engagesdk.common.Utils
@@ -9,6 +10,7 @@ import io.locally.engagesdk.datamodels.impression.Demographics
 import io.locally.engagesdk.geofences.GeofenceMonitor
 import io.locally.engagesdk.managers.AuthenticationManager
 import io.locally.engagesdk.notifications.NotificationManager
+import io.locally.engagesdk.widgets.WidgetsPresenter
 
 @SuppressLint("StaticFieldLeak")
 object EngageSDK {
@@ -35,6 +37,12 @@ object EngageSDK {
         NotificationManager.subscribe(callback)
     }
 
+    fun setListener(campaignListener: CampaignListener){
+      WidgetsPresenter.campaignListener = campaignListener
+    }
+
+    fun clearContent() = CampaignCoordinator.clear()
+
     fun startMonitoringBeacons(){
         beaconsMonitor.subscribe(CampaignCoordinator)
         beaconsMonitor.startMonitoring()
@@ -48,4 +56,8 @@ object EngageSDK {
     }
 
     fun stopMonitoringGeofences() = geofenceMonitor.stopMonitoring()
+
+    interface CampaignListener {
+        fun didCampaignArrived(intent: Intent) {}
+    }
 }
