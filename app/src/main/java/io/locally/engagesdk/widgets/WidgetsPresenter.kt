@@ -7,9 +7,11 @@ import io.locally.engagesdk.datamodels.campaign.CampaignContent
 import io.locally.engagesdk.notifications.NotificationContent
 import io.locally.engagesdk.widgets.factories.WidgetsAbstractFactory
 import com.google.gson.Gson
+import io.locally.engagesdk.EngageSDK
 
 object WidgetsPresenter {
     var isPresentingWidget: Boolean = false
+    var campaignListener: EngageSDK.CampaignListener? = null
 
     fun presentWidget(context: Context, content: CampaignContent, callback: ((Boolean) -> Unit)? = null) {
         val widget = WidgetsAbstractFactory.widget(context, content)
@@ -21,14 +23,13 @@ object WidgetsPresenter {
                     NotificationManager.sendNotification(NotificationContent(campaignContent = content), it)
                     callback?.invoke(false)
                 }
-                else {
-                    context.startActivity(widget)
-                    callback?.invoke(true)
-                }
+                else callback?.invoke(true)
             } else {
                 NotificationManager.sendNotification(NotificationContent(campaignContent = content), it)
                 callback?.invoke(true)
             }
+
+            campaignListener?.didCampaignArrived(it)
         } ?: run {
             callback?.invoke(false)
         }

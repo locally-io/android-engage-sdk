@@ -20,7 +20,7 @@ import org.jetbrains.anko.doAsync
 object CampaignCoordinator: BeaconListener, LocationListener {
 
     private lateinit var context: Context
-    private var campaigns = mutableSetOf<CampaignContent>()
+    private var campaigns = mutableSetOf<String>()
     private lateinit var locationManager: LocationManager
 
     fun init(context: Context) {
@@ -28,6 +28,8 @@ object CampaignCoordinator: BeaconListener, LocationListener {
 
         locationManager = LocationManager(context)
     }
+
+    fun clear() = campaigns.clear()
 
     private fun requestCampaigns(beacons: List<Beacon>){
         locationManager.currentLocation { current ->
@@ -42,9 +44,10 @@ object CampaignCoordinator: BeaconListener, LocationListener {
             CampaignServices.getCampaign(bluetoothEnabled = true, location = location, beacon = beacon)
                     .subscribe({ campaign ->
                         campaign.data?.campaignContent?.let { content ->
-                            campaigns.any { content.id == it.id }.apply {
+                            val value = "${content.id}${beacon.proximity}"
+                            campaigns.any { it == value }.apply {
                                 if(!this) {
-                                    campaigns.add(content)
+                                    campaigns.add(value)
                                     WidgetsPresenter.presentWidget(context, content)
                                 } else println("${content.id} is already displayed")
                             }
@@ -62,9 +65,9 @@ object CampaignCoordinator: BeaconListener, LocationListener {
             GeofenceServices.getGeofences(request)
                     .subscribe({ campaign ->
                         campaign.data?.campaignContent?.let { content ->
-                            campaigns.any { content.id == it.id }.apply {
+                            campaigns.any { content.id.toString() == it }.apply {
                                 if(!this) {
-                                    campaigns.add(content)
+                                    campaigns.add(content.id.toString())
                                     WidgetsPresenter.presentWidget(context, content)
                                 } else println("${content.id} is already displayed")
                             }
