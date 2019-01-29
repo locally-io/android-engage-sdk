@@ -1,11 +1,13 @@
 package io.locally.engagesdk.notifications
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import com.amazonaws.auth.CognitoCachingCredentialsProvider
@@ -25,6 +27,7 @@ object NotificationManager {
     private lateinit var client: AmazonSNSClient
     private lateinit var provider: CognitoCachingCredentialsProvider
     private const val channelId = "engage-notification"
+    private const val channelName = "eng-notif-content"
 
     fun init(context: Context) {
         NotificationManager.context = context
@@ -87,15 +90,23 @@ object NotificationManager {
             intent?.apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK }
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, channelName, android.app.NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
+        }
+
         notificationBuilder = NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true)
                 .setAutoCancel(true)
 
-        with(NotificationManagerCompat.from(context)) {
+        with(notificationManager) {
             val id = notificationContent.campaignContent?.id ?: 1
             notify(id, notificationBuilder.build())
         }
