@@ -15,7 +15,7 @@ This document contains the first steps to integrate EngageSDK to your applicatio
 
 ```groovy
         //library
-        implementation 'io.locally:engage-sdk:1.0.0'
+        implementation 'io.locally:engage-core:1.0.0'
         //Locations
         implementation 'com.google.android.gms:play-services-location:15.0.1'
         implementation 'com.google.android.gms:play-services-ads:15.0.1'
@@ -111,7 +111,7 @@ This document contains the first steps to integrate EngageSDK to your applicatio
     
 ```Java
         private fun getContent(intent: Intent){
-            val json = intent.getStringExtra(CAMPAIGN_CONTENT)
+            val json = intent.getStringExtra("campaignContent")
             val content = Gson().fromJson(json, CampaignContent::class.java)
             
             System.out.println(content.headerTitle)
