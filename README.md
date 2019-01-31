@@ -16,6 +16,8 @@ This document contains the first steps to integrate EngageSDK to your applicatio
 ```groovy
         //library
         implementation 'io.locally:engage-core:1.0.0'
+        //Android 9 or above
+        implementation 'commons-logging:commons-logging:1.1.1'
         //Locations
         implementation 'com.google.android.gms:play-services-location:15.0.1'
         implementation 'com.google.android.gms:play-services-ads:15.0.1'
