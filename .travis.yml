@@ -9,4 +9,4 @@ env:
     - ADB_INSTALL_TIMEOUT=8
 
 script:
-  - ./gradlew clean assembleDebug assembleRelease testDebug
+  - chmod +x ./gradlew clean assembleDebug assembleRelease testDebug
