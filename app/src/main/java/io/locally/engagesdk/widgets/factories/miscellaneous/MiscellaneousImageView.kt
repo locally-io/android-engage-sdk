@@ -38,8 +38,15 @@ class MiscellaneousImageView: Widget(){
         header.text = content.headerTitle
         Picasso.get().load(content.mediaImage.url).into(image)
 
-        action.content(content.campaignContentButtons.first())
-        action2.content(content.campaignContentButtons.last())
+        content.campaignContentButtons.isNotEmpty().apply {
+            if(this){
+                action.content(content.campaignContentButtons.first())
+                action2.content(content.campaignContentButtons.last())
+            }else {
+                action.visibility = GONE
+                action2.visibility = GONE
+            }
+        }
 
         image.setOnTouchListener(OnSwipeTouchListener(this))
     }
