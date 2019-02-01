@@ -1,4 +1,5 @@
 # EngageSDK
+[![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk)
 
 This document contains the first steps to integrate EngageSDK to your application, some of the steps may change due different ways to make the process.
 
