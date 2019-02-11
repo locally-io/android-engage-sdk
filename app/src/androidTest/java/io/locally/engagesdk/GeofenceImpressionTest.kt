@@ -3,8 +3,7 @@ package io.locally.engagesdk
 import android.location.Location
 import android.support.test.InstrumentationRegistry
 import io.locally.engagesdk.common.Utils
-import io.locally.engagesdk.datamodels.campaign.Campaign
-import io.locally.engagesdk.datamodels.campaign.Campaign.Data
+import io.locally.engagesdk.datamodels.campaign.GeofenceCampaign
 import io.locally.engagesdk.datamodels.impression.ImpressionGeofence
 import io.locally.engagesdk.datamodels.impression.ImpressionType.GEOFENCE
 import io.locally.engagesdk.datamodels.impression.Proximity.FAR
@@ -26,7 +25,6 @@ class GeofenceImpressionTest {
     lateinit var mock: MockRetrofit
 
     lateinit var impression: ImpressionGeofence
-    lateinit var campaign: Campaign
 
     @Before
     fun setUp(){
@@ -42,12 +40,11 @@ class GeofenceImpressionTest {
         geofences = mock.create(GeofenceAPI::class.java)
 
         impression = ImpressionGeofence(true, GEOFENCE, FAR, Location("GPS"))
-        campaign = Campaign(Data(1, 1, 1, 1, null, "", 1))
     }
 
     @Test
     fun testImpressionSuccess(){
-        geofences.returningResponse(campaign)
+        geofences.returningResponse(GeofenceCampaign(data = GeofenceCampaign.Data()))
                 .getGeofences(impression)
                 .test()
                 .assertTerminated()
@@ -58,7 +55,7 @@ class GeofenceImpressionTest {
 
     @Test
     fun testImpressionFailure(){
-        geofences.returningResponse(Campaign(data = null))
+        geofences.returningResponse(GeofenceCampaign(data = null))
                 .getGeofences(impression)
                 .test()
                 .assertTerminated()
