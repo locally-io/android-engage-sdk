@@ -90,7 +90,7 @@ object Utils {
         set(value) {
             value?.let { date ->
                 preferences.edit { it.putLong(REFRESH_DATE, date.time) }
-            }
+            } ?: preferences.edit { it.putLong(REFRESH_DATE, 0) }
         }
 
     var sns: String?
