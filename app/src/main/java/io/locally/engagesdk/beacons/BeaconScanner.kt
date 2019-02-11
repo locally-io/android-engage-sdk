@@ -50,8 +50,18 @@ object BeaconScanner: IBeaconListener {
     override fun onIBeaconDiscovered(iBeacon: IBeaconDevice?, region: IBeaconRegion?) {}
 
     fun stopScan(){
-        proximityManager.stopScanning()
-        proximityManager.disconnect()
+        ::proximityManager.isInitialized.apply {
+            if(this) {
+                proximityManager.isConnected.apply {
+                    if(this){
+                        proximityManager.isScanning.apply {
+                            if(this) proximityManager.stopScanning()
+                        }
+                        proximityManager.disconnect()
+                    }
+                }
+            }
+        }
     }
 
     override fun onIBeaconsUpdated(iBeacons: MutableList<IBeaconDevice>?, region: IBeaconRegion?) {
