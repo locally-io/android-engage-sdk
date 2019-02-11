@@ -8,7 +8,7 @@ class NotificationService: FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
         remoteMessage?.notification?.let {
             with(it){
-                NotificationManager.sendPushNotification(NotificationContent(remoteContent = NotificationContent.RemoteContent(title, body)))
+                NotificationManager.sendPushNotification(applicationContext, NotificationContent(remoteContent = NotificationContent.RemoteContent(title, body)))
             }
         } ?: run {
             remoteMessage?.data?.isNotEmpty()?.let {
@@ -16,7 +16,7 @@ class NotificationService: FirebaseMessagingService() {
                     val data = remoteMessage.data["locally"]
                     val content = Gson().fromJson(data, NotificationContent.RemoteContent::class.java)
 
-                    NotificationManager.sendPushNotification(NotificationContent(
+                    NotificationManager.sendPushNotification(applicationContext, NotificationContent(
                             remoteContent = NotificationContent.RemoteContent(title = content.title, link = content.link)))
                 }
             }
