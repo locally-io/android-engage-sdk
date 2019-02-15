@@ -16,7 +16,7 @@ This document contains the first steps to integrate EngageSDK to your applicatio
 
 ```groovy
         //library
-        implementation 'io.locally:engage-core:1.0.0'
+        implementation 'io.locally:engage-core:1.0.1'
         //Android 9 or above
         implementation 'commons-logging:commons-logging:1.1.1'
         //Locations
@@ -61,13 +61,17 @@ This document contains the first steps to integrate EngageSDK to your applicatio
 
 - **Login**
     
-    After initializing you may log into _**Locally platform**_ using your app keys. This method returns `true` if a success login or `false` otherwise.
+    After initializing you may log into _**Locally platform**_ using your app keys. This method returns an `AuthStatus` depending on the response from the server (SUCCESS, UNAUTHORIZED, CONNECTION_ERROR, UNKNOWN_ERROR)
 
 ```Java
         private fun performLogin(){
-            EngageSDK.login("YOUR APP USERNAME", "YOUR APP PASSWORD") { //Here you can handle the response
-                if(it) System.out.println("login success") //Notice in kotlin default lambda object "it"
-                else System.out.println("login error")
+            EngageSDK.login("YOUR APP USERNAME", "YOUR APP PASSWORD") { status, message -> 
+                when(status) {
+                    AuthStatus.SUCCESS -> { /* login success */ }
+                    AuthStatus.UNAUTHORIZED -> { /* wrong username/password */ }
+                    AuthStatus.CONNECTION_ERROR -> { /* failed trying to connect */ }
+                    AuthStatus.UNKNOWN_ERROR -> { /* unknown error */ System.out.println(message) }
+                }
             }
         }
 ```
@@ -100,25 +104,21 @@ This document contains the first steps to integrate EngageSDK to your applicatio
         class MainActivity : AppCompatActivity() {             
             fun handleCampaignContent() {
                 EngageSDK.setListener(object: EngageSDK.CampaignListener {
-                    override fun didCampaignArrived(intent: Intent) {
-                        //Handle content
-                        getContent(intent)
+                    override fun didCampaignArrived(campaign: CampaignContent?) {
+                        //Handle campaign
+                        getContent(campaign)
                     }
                 })
             }
         }
 ```
->You can just launch the value `intent` to display the content, otherwise you can get it like the following:
+>You can just launch the value `campaign` using the default widget handler `WidgetsPresenter`:
 
->Content comes in *JSON* format but it can easly be transformed to object
+>`WidgetPresenters` takes the content provided and tries to open it as an Activity if the application is on top, otherwise it sends a notification. 
     
 ```Java
-        private fun getContent(intent: Intent){
-            val json = intent.getStringExtra("campaignContent")
-            val content = Gson().fromJson(json, CampaignContent::class.java)
-            
-            System.out.println(content.headerTitle)
-            System.out.println(content.notificationMessage)
+        private fun getContent(campaign: CampaignContent?){
+            WidgetsPresenter.presentWidget(applicationContext, campaign)
         }
 ```
     
