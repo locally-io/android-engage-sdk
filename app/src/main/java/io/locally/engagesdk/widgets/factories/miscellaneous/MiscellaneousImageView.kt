@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -21,6 +23,7 @@ import io.locally.engagesdk.widgets.Widget
 import io.locally.engagesdk.widgets.WidgetsPresenter
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import io.locally.engagesdk.network.services.interactions.InteractionService
 import kotlinx.android.synthetic.main.b_full_screen_image.*
 
 class MiscellaneousImageView: Widget(){
@@ -64,18 +67,26 @@ class MiscellaneousImageView: Widget(){
     private fun Button.content(contentButton: Content){
         if(contentButton.label.isNotEmpty()){
             this.text = contentButton.label
+            val color = this.background as GradientDrawable
+            color.setColor(Color.parseColor(contentButton.color))
 
             when(contentButton.action) {
                 "OPEN_URL" -> {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(contentButton.data)
-                    this.setOnClickListener { context.startActivity(intent) }
+                    this.setOnClickListener {
+                        InteractionService.registerInteraction(content.campaign, content.impression, "OPEN_URL")
+
+                        context.startActivity(intent)
+                    }
                 }
                 "PHONE_CALL" -> {
                     val intent = Intent(Intent.ACTION_CALL)
                     intent.data = Uri.parse("tel:${contentButton.data}")
                     this.setOnClickListener {
                         if(ActivityCompat.checkSelfPermission(context, permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                            InteractionService.registerInteraction(content.campaign, content.impression, "PHONE_CALL")
+
                             context.startActivity(intent)
                         } else println("CALL_PHONE Permission Needed")
                     }

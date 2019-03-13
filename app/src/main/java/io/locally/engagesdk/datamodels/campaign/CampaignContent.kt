@@ -21,7 +21,9 @@ class CampaignContent(var id: Int,
                       val campaignContentActions: Array<Content>,
                       val campaignContentButtons: Array<Content>,
                       val mediaVideo: MediaVideo,
-                      val mediaImage: MediaImage): Serializable {
+                      val mediaImage: MediaImage,
+                      var campaign: String? = null,
+                      var impression: String? = null): Serializable {
 
     enum class Layout(private val value: String): CharSequence by value {
         RETAIL("retail"),
