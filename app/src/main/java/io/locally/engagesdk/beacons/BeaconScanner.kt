@@ -1,11 +1,6 @@
 package io.locally.engagesdk.beacons
 
 import android.content.Context
-import io.locally.engagesdk.common.UUID
-import io.locally.engagesdk.common.Utils
-import io.locally.engagesdk.datamodels.impression.Beacon
-import io.locally.engagesdk.datamodels.impression.ImpressionType.BEACON
-import io.locally.engagesdk.datamodels.impression.Proximity
 import com.kontakt.sdk.android.ble.configuration.ScanMode
 import com.kontakt.sdk.android.ble.configuration.ScanPeriod
 import com.kontakt.sdk.android.ble.device.BeaconRegion
@@ -16,6 +11,12 @@ import com.kontakt.sdk.android.common.KontaktSDK
 import com.kontakt.sdk.android.common.Proximity.*
 import com.kontakt.sdk.android.common.profile.IBeaconDevice
 import com.kontakt.sdk.android.common.profile.IBeaconRegion
+import io.locally.engagesdk.EventHandler
+import io.locally.engagesdk.common.UUID
+import io.locally.engagesdk.common.Utils
+import io.locally.engagesdk.datamodels.impression.Beacon
+import io.locally.engagesdk.datamodels.impression.ImpressionType.BEACON
+import io.locally.engagesdk.datamodels.impression.Proximity
 import java.util.UUID.fromString
 
 object BeaconScanner: IBeaconListener {
@@ -75,6 +76,9 @@ object BeaconScanner: IBeaconListener {
                             UNKNOWN -> Proximity.FAR
                             else -> Proximity.FAR
                         }
+
+                val debug = Beacon(BEACON, proximity, iBeacon.major, iBeacon.minor)
+                EventHandler.listener?.beaconUpdate(debug, Utils.logTime())
 
                 Beacon(BEACON, proximity, iBeacon.major, iBeacon.minor)
             }
