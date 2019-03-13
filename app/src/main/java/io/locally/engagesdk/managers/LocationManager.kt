@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import com.google.android.gms.common.api.ResolvableApiException
@@ -15,13 +14,13 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import io.locally.engagesdk.common.FAST_INTERVAL
 import io.locally.engagesdk.common.INTERVAL
+import io.locally.engagesdk.common.Utils
 
-class LocationManager(private val context: Context): LocationCallback() {
+data class LocationManager(private val context: Context, var delegate: LocationDelegate? = null): LocationCallback() {
 
     private val REQUEST_CHECK_SETTINGS = 102
     private var fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     private var callback: ((Location?) -> Unit)? = null
-    private var delegate: LocationDelegate? = null
 
     init {
         requestPermissions()
@@ -37,9 +36,7 @@ class LocationManager(private val context: Context): LocationCallback() {
         }
     }
 
-    fun startMonitoring(delegate: LocationDelegate){
-        this.delegate = delegate
-
+    fun startMonitoring(){
         if(hasPermission){
             locationUpdates()
         } else {
@@ -78,6 +75,7 @@ class LocationManager(private val context: Context): LocationCallback() {
 
     override fun onLocationResult(locations: LocationResult?) {
         locations?.lastLocation?.let { location ->
+            io.locally.engagesdk.EventHandler.listener?.locationUpdate(location, Utils.logTime())
             delegate?.didLocationUpdated(location)
         }
     }
@@ -89,7 +87,7 @@ class LocationManager(private val context: Context): LocationCallback() {
                 .addOnFailureListener { callback?.invoke(null) }
     }
 
-    private var hasPermission: Boolean = false
+    private val hasPermission: Boolean
         get() {
             val coarse = ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION)
             val fine = ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -101,21 +99,6 @@ class LocationManager(private val context: Context): LocationCallback() {
         ActivityCompat.requestPermissions(context as Activity,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.CALL_PHONE), REQUEST_CHECK_SETTINGS)
-    }
-
-    fun fromLocation(location: Location): io.locally.engagesdk.datamodels.impression.Location {
-        val vertical = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            location.verticalAccuracyMeters.toDouble()
-        } else {
-            0.0
-        }
-
-        return io.locally.engagesdk.datamodels.impression.Location(latitude = location.latitude,
-                longitude = location.longitude,
-                altitude = location.altitude,
-                horizontal = location.accuracy.toDouble(),
-                speed = location.speed.toDouble(),
-                vertical = vertical)
     }
 
     interface LocationDelegate {
