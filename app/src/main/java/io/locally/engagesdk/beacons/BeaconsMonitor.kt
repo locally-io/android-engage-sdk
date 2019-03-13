@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import io.locally.engagesdk.campaigns.CampaignCoordinator
 import io.locally.engagesdk.datamodels.impression.Beacon
 
 class BeaconsMonitor(private val context: Context): BeaconDelegate {
@@ -14,11 +15,7 @@ class BeaconsMonitor(private val context: Context): BeaconDelegate {
         private const val REQUEST_CODE = 101
     }
 
-    private val subscribers = arrayListOf<BeaconListener>()
-
-    init {
-        requestPermissions()
-    }
+    init { requestPermissions() }
 
     fun startMonitoring(){
         val identifier = java.util.UUID.randomUUID().toString() //random identifier (for now)
@@ -28,20 +25,11 @@ class BeaconsMonitor(private val context: Context): BeaconDelegate {
         else requestPermissions()
     }
 
-    fun stopMonitoring(){
-        BeaconScanner.stopScan()
-        subscribers.clear()
-    }
+    fun stopMonitoring() = BeaconScanner.stopScan()
 
-    fun subscribe(subscriber: BeaconListener){
-        subscribers.add(subscriber)
-    }
+    override fun didBeaconsUpdated(beacons: List<Beacon>) = CampaignCoordinator.requestBeaconCampaigns(beacons)
 
-    override fun didBeaconsUpdated(beacons: List<Beacon>) {
-        subscribers.forEach { it.didBeaconUpdated(beacons) }
-    }
-
-    private var hasPermission: Boolean = false
+    private val hasPermission: Boolean
         get() {
             val coarse = ContextCompat.checkSelfPermission(context, ACCESS_COARSE_LOCATION)
             val fine = ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION)
@@ -56,9 +44,5 @@ class BeaconsMonitor(private val context: Context): BeaconDelegate {
         ActivityCompat.requestPermissions(context as Activity,
                 arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION,
                         BLUETOOTH_ADMIN, BLUETOOTH), REQUEST_CODE)
-    }
-
-    interface BeaconListener {
-        fun didBeaconUpdated(beacons: List<Beacon>) {}
     }
 }

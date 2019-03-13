@@ -28,12 +28,10 @@ class AuthenticationManager {
                 AuthenticationServices.login(username, password, id.replace("-", ""))
                         .subscribe({ response ->
                             response.data?.let {
-                                println(Gson().toJson(it))
                                 TokenManager.accessToken(it)
                                 callback?.invoke(SUCCESS, "Success login")
                             }
                         }, {
-                            println(it)
                             if(it is HttpException){
                                 when(it.code()){
                                     401 -> callback?.invoke(UNAUTHORIZED, it.message())
