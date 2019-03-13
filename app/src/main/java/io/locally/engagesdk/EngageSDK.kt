@@ -2,10 +2,14 @@ package io.locally.engagesdk
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.location.Location
+import com.kontakt.sdk.android.common.profile.IBeaconDevice
 import io.locally.engagesdk.beacons.BeaconsMonitor
 import io.locally.engagesdk.campaigns.CampaignCoordinator
 import io.locally.engagesdk.common.Utils
 import io.locally.engagesdk.datamodels.campaign.CampaignContent
+import io.locally.engagesdk.datamodels.campaign.GeofenceCampaign
+import io.locally.engagesdk.datamodels.impression.Beacon
 import io.locally.engagesdk.datamodels.impression.Demographics
 import io.locally.engagesdk.geofences.GeofenceMonitor
 import io.locally.engagesdk.managers.AuthStatus
@@ -28,9 +32,8 @@ object EngageSDK {
         geofenceMonitor = GeofenceMonitor(activity)
     }
 
-    fun login(username: String, password: String, callback: ((AuthStatus, String?) -> Unit)? = null){
+    fun login(username: String, password: String, callback: ((AuthStatus, String?) -> Unit)? = null) =
         AuthenticationManager.login(username, password, callback)
-    }
 
     fun logout(callback: ((Boolean) -> Unit)? = null) {
         AuthenticationManager.logout(callback).let {
@@ -45,27 +48,30 @@ object EngageSDK {
         NotificationManager.subscribe(activity, callback)
     }
 
-    fun setListener(campaignListener: CampaignListener){
-      CampaignCoordinator.campaignListener = campaignListener
-    }
+    fun setListener(campaignListener: CampaignListener) { CampaignCoordinator.campaignListener = campaignListener }
 
     fun clearContent() = CampaignCoordinator.clear()
 
-    fun startMonitoringBeacons(){
-        beaconsMonitor.subscribe(CampaignCoordinator)
-        beaconsMonitor.startMonitoring()
-    }
+    fun startMonitoringBeacons() = beaconsMonitor.startMonitoring()
 
     fun stopMonitoringBeacons() = beaconsMonitor.stopMonitoring()
 
-    fun startMonitoringGeofences(){
-        geofenceMonitor.subscribe(CampaignCoordinator)
-        geofenceMonitor.startMonitoring()
-    }
+    fun startMonitoringGeofences() = geofenceMonitor.startMonitoring()
 
     fun stopMonitoringGeofences() = geofenceMonitor.stopMonitoring()
 
+    fun setEventListener(listener: EventListener?) { EventHandler.listener = listener}
+
     interface CampaignListener {
         fun didCampaignArrived(campaign: CampaignContent?) {}
+    }
+
+    interface EventListener {
+        fun locationUpdate(location: Location, time: String) {}
+        fun beaconUpdate(beacon: Beacon, time: String) {}
+        fun impressionUpdate(message: String, time: String) {}
+        fun beaconCampaignUpdate(campaignContent: CampaignContent, time: String) {}
+        fun geofenceCampaignUpdate(campaignContent: GeofenceCampaign.Campaign, time: String) {}
+        fun error(message: String, time: String) {}
     }
 }

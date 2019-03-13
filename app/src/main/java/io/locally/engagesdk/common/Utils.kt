@@ -14,13 +14,11 @@ import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.LOLLIPOP
 import android.telephony.TelephonyManager
-import io.locally.engagesdk.common.Utils.TYPE.IPV4
-import io.locally.engagesdk.common.Utils.TYPE.IPV6
-import io.locally.engagesdk.datamodels.impression.Demographics
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import io.locally.engagesdk.datamodels.impression.Demographics
 import org.jetbrains.anko.doAsync
 import java.net.Inet4Address
 import java.net.Inet6Address
@@ -249,6 +247,14 @@ object Utils {
 
     private enum class TYPE {
         IPV4, IPV6
+    }
+
+    fun logTime(): String {
+        val current = Calendar.getInstance().apply { time = Date() }
+
+        return "${current.get(Calendar.HOUR_OF_DAY)}:" +
+                "${current.get(Calendar.MINUTE)}:" +
+                "${current.get(Calendar.SECOND)} >> "
     }
 
     fun isForeground(context: Context): Boolean {
