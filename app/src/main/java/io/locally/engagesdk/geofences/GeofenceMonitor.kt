@@ -106,7 +106,7 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
         }
     }
 
-    fun startMonitoring(radius: Int = 500, refresh: Long = 600000) {
+    fun startMonitoring(radius: Int, refresh: Long) {
         boundings = 0
         locationManager.startMonitoring()
         geofenceInside.clear()

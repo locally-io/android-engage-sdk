@@ -56,7 +56,7 @@ object EngageSDK {
 
     fun stopMonitoringBeacons() = beaconsMonitor.stopMonitoring()
 
-    fun startMonitoringGeofences() = geofenceMonitor.startMonitoring()
+    fun startMonitoringGeofences(radius: Int = 500, refresh: Long = 600000) = geofenceMonitor.startMonitoring(radius, refresh)
 
     fun stopMonitoringGeofences() = geofenceMonitor.stopMonitoring()
 
