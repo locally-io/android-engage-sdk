@@ -1,5 +1,5 @@
 # EngageSDK
-[![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk)
+[![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk) [ ![Download](https://api.bintray.com/packages/locally/engage/core/images/download.svg?version=1.1.0) ](https://bintray.com/locally/engage/core/1.1.0/link)
 
 This document contains the first steps to integrate EngageSDK to your application, some of the steps may change due different ways to make the process.
 
@@ -16,7 +16,7 @@ This document contains the first steps to integrate EngageSDK to your applicatio
 
 ```groovy
         //library
-        implementation 'io.locally:engage-core:1.0.1'
+        implementation 'io.locally:engage-core:1.1.0'
         //Android 9 or above
         implementation 'commons-logging:commons-logging:1.1.1'
         //Locations
@@ -79,11 +79,13 @@ This document contains the first steps to integrate EngageSDK to your applicatio
 - **Monitoring**
     
     EngageSDK provides a monitor to search for surrounding content based on your position or nearby bluetooth devices(**beacons**).
+    
+    For geofences you can set up the **radius** and **refresh** interval by sending those values to the monitor. By default it scans      around 500 miles and refresh each 10 mins(in milis) 
 
 ```Java
         private fun startMonitoring(){
             EngageSDK.startMonitoringBeacons() //to monitor for nearby beacons
-            EngageSDK.startMonitoringGeofences() //to monitor your current location
+            EngageSDK.startMonitoringGeofences(radius = 500, refresh = 600000) 
         }
 ```
 
@@ -94,6 +96,25 @@ This document contains the first steps to integrate EngageSDK to your applicatio
             EngageSDK.stopMonitoringBeacons() 
             EngageSDK.stopMonitoringGeofences() 
         }
+```
+
+- **Listen for Events**
+    To listen for events you need to do set a listener override the methods like:
+
+```Java
+      EngageSDK.setEventListener(object: EngageSDK.EventListener {
+          override fun beaconCampaignUpdate(campaignContent: CampaignContent, time: String) {}
+
+          override fun beaconUpdate(beacon: Beacon, time: String) {}
+
+          override fun error(message: String, time: String) {}
+
+          override fun geofenceCampaignUpdate(campaignContent: GeofenceCampaign.Campaign, time: String) {}
+
+          override fun impressionUpdate(message: String, time: String) {}
+
+          override fun locationUpdate(location: Location, time: String) {}
+      })
 ```
 
 - **Handling Content**
