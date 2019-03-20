@@ -7,9 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.location.Location
-import android.support.annotation.UiThread
 import android.support.v4.content.LocalBroadcastManager
-import android.util.Log
 import com.google.android.gms.location.Geofence.*
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
@@ -21,7 +19,7 @@ import io.locally.engagesdk.campaigns.CampaignCoordinator
 import io.locally.engagesdk.common.TIMER_DELAY
 import io.locally.engagesdk.common.Utils
 import io.locally.engagesdk.datamodels.geofences.Geofence
-import io.locally.engagesdk.datamodels.geofences.Geofence.CoverageType.*
+import io.locally.engagesdk.datamodels.geofences.Geofence.CoverageType.POLYGON
 import io.locally.engagesdk.datamodels.impression.Proximity
 import io.locally.engagesdk.datamodels.impression.Proximity.ENTER
 import io.locally.engagesdk.datamodels.impression.Proximity.EXIT
@@ -29,8 +27,6 @@ import io.locally.engagesdk.managers.LocationManager
 import io.locally.engagesdk.managers.LocationManager.LocationDelegate
 import io.locally.engagesdk.network.services.geofences.GeofenceServices
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.runOnUiThread
-import org.jetbrains.anko.toast
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -46,6 +42,7 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
         val intent = Intent(context, GeofenceTransitions::class.java)
         PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
+    private var boundings: Int = 0
     private val geofenceResponse = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val trigger = intent?.getStringExtra("proximity")
@@ -54,24 +51,51 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
                 id?.let {
                     when(trigger) {
                         "ENTER" -> {
-                            geofenceInside.contains(id).apply {
-                                if(!this) {
-                                    locationManager.currentLocation { current ->
-                                        current?.let { EventHandler.listener?.impressionUpdate("Entered circle geofence - lat(${it.latitude} lng(${it.longitude})", Utils.logTime()) }
-                                    }
+                            geofences.find { g -> g.id.toString() == id }.apply {
+                                val geofence = this
+                                if(geofence?.type == POLYGON) {
+                                    EventHandler.listener?.impressionUpdate("Entering Bounding Circle - Lat(${geofence.center.lat}) Lng(${geofence.center.lng}) Radius(${geofence.center.radius})", Utils.logTime())
 
-                                    requestCampaign(ENTER, id)
+                                    if(boundings == 0) {
+                                        locationManager.startMonitoring()
+                                        EventHandler.listener?.impressionUpdate("Starting scan for Polygon Geofence", Utils.logTime())
+                                    }
+                                    boundings.inc()
+                                } else {
+                                    geofenceInside.contains(id).apply {
+                                        if(this.not()) {
+                                            locationManager.currentLocation { current ->
+                                                current?.let { EventHandler.listener?.impressionUpdate("Entering Circle Geofence - Lat(${geofence?.center?.lat}) Lng(${geofence?.center?.lng}) Radius(${geofence?.center?.radius})", Utils.logTime()) }
+                                            }
+
+                                            requestCampaign(ENTER, id)
+                                        }
+                                    }
                                 }
                             }
                         }
                         "EXIT" -> {
-                            geofenceInside.contains(id).apply {
-                                if(this) {
-                                    locationManager.currentLocation { current ->
-                                        current?.let { EventHandler.listener?.impressionUpdate("Leaved circle geofence - lat(${it.latitude} lng(${it.longitude})", Utils.logTime()) }
-                                    }
+                            geofences.find { g -> g.id.toString() == id }.apply {
+                                val geofence = this
+                                if(this?.type == POLYGON) {
+                                    boundings.dec()
+                                    EventHandler.listener?.impressionUpdate("Leaving Bounding Circle - Lat(${geofence?.center?.lat}) Lng(${geofence?.center?.lng}) Radius(${geofence?.center?.radius})", Utils.logTime())
 
-                                    requestCampaign(EXIT, id)
+
+                                    if(boundings == 0) {
+                                        EventHandler.listener?.impressionUpdate("Stopping scan for Polygon Geofence", Utils.logTime())
+                                        locationManager.stopMonitoring()
+                                    }
+                                } else {
+                                    geofenceInside.contains(id).apply {
+                                        if(this) {
+                                            locationManager.currentLocation { current ->
+                                                current?.let { EventHandler.listener?.impressionUpdate("Leaving Circle Geofence - Lat(${geofence?.center?.lat}) Lng(${geofence?.center?.lng}) Radius(${geofence?.center?.radius})", Utils.logTime()) }
+                                            }
+
+                                            requestCampaign(EXIT, id)
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -83,6 +107,7 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
     }
 
     fun startMonitoring(radius: Int = 500, refresh: Long = 600000) {
+        boundings = 0
         locationManager.startMonitoring()
         geofenceInside.clear()
         timer = Timer("GeofenceRefresh", true).apply {
@@ -97,8 +122,7 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
     @SuppressLint("MissingPermission")
     private fun updateMonitor() {
         geofencesMonitored.clear()
-        val circular = geofences.filter { geofence -> geofence.type == RADIUS }
-        circular.forEach { geofence ->
+        geofences.forEach { geofence ->
             geofencesMonitored.add(Builder()
                     .setRequestId(geofence.id.toString())
                     .setCircularRegion(geofence.center.lat, geofence.center.lng, (geofence.center.radius * 1609.344).toFloat())
@@ -107,18 +131,9 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
                     .build())
         }
 
-        Log.i(TAG, "Monitoring ${geofencesMonitored.size} geofences")
-
-        geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent)?.run {
-            addOnSuccessListener {
-                Log.i(TAG, "Monitoring geofences")
-            }
-            addOnFailureListener {
-                Log.e(TAG, "Error: ${it.localizedMessage}")
-            }
-        }
-
+        geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent)
         locationManager.delegate = this
+        locationManager.stopMonitoring()
     }
 
     fun stopMonitoring() {
@@ -127,14 +142,7 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
         locationManager.stopMonitoring()
         timer.cancel()
         timer.purge()
-        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
-            addOnSuccessListener {
-                Log.i(TAG, "Stopped Geofence Monitor")
-            }
-            addOnFailureListener {
-                Log.e(TAG, "Error: ${it.localizedMessage}")
-            }
-        }
+        geofencingClient.removeGeofences(geofencePendingIntent)
     }
 
     private fun checkSurrounding(location: Location?, radius: Int) {
@@ -165,7 +173,7 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
                         if(this) {
                             geofenceInside.contains(polygon.id.toString()).apply {
                                 if(!this) {
-                                    EventHandler.listener?.impressionUpdate("Entered polygon geofence - lat(${location.latitude} lng(${location.longitude})", Utils.logTime())
+                                    EventHandler.listener?.impressionUpdate("Entered Polygon Geofence - Lat(${location.latitude}) Lng(${location.longitude})", Utils.logTime())
 
                                     requestCampaign(ENTER, polygon.id.toString())
                                 }
@@ -173,7 +181,7 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
                         } else {
                             geofenceInside.contains(polygon.id.toString()).apply {
                                 if(this) {
-                                    EventHandler.listener?.impressionUpdate("Leaved polygon geofence - lat(${location.latitude} lng(${location.longitude})", Utils.logTime())
+                                    EventHandler.listener?.impressionUpdate("Leaved Polygon Geofence - Lat(${location.latitude}) Lng(${location.longitude})", Utils.logTime())
 
                                     requestCampaign(EXIT, polygon.id.toString())
                                 }
@@ -183,19 +191,18 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
                 }
     }
 
-    private fun requestCampaign(proximity: Proximity, id: String){
+    private fun requestCampaign(proximity: Proximity, id: String) {
         when(proximity) {
             ENTER -> {
                 CampaignCoordinator.requestGeofenceCampaign(proximity)
                 geofenceInside.add(id)
-                Log.i(TAG, "Entered: $id")
             }
             EXIT -> {
                 CampaignCoordinator.requestGeofenceCampaign(proximity)
                 geofenceInside.remove(id)
-                Log.i(TAG, "Leaved: $id")
             }
-            else -> {}
+            else -> {
+            }
         }
     }
 }
