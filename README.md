@@ -82,7 +82,7 @@ This document outlines the intial steps developers take to integrate the EngageS
 
 - **Monitoring**
     
-    EngageSDK provides a monitor to search for surrounding content based on your position or nearby bluetooth devices(**beacons**).
+    EngageSDK provides a monitor to search for surrounding content based on your position or nearby bluetooth devices (_aka_ **beacons**).
     
     For _Geofences_ you can set up the **radius** and **refresh** interval by sending those values to the monitor. By default they system scans      a radius of 500 miles, which is refreshed every 10 mins (measured in miliseconds): 
 
@@ -93,7 +93,7 @@ This document outlines the intial steps developers take to integrate the EngageS
         }
 ```
 
-You can also **stop** monitoring by adding the following:
+     You can also **stop** monitoring by adding the following:
         
 ```Java
         private fun stopMonitoring(){
