@@ -1,7 +1,7 @@
 # EngageSDK
 [![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk) [ ![Download](https://api.bintray.com/packages/locally/engage/core/images/download.svg?version=1.1.0) ](https://bintray.com/locally/engage/core/1.1.0/link)
 
-This document contains the first steps to integrate EngageSDK to your application, some of the steps may change due different ways to make the process.
+This document outlines the intial steps developers must take in order to integrate the EngageSDK to an Android application. Some variation may be required.
 
 ## Requirementes
 
