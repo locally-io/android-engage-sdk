@@ -1,13 +1,13 @@
 # EngageSDK
 [![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk) [ ![Download](https://api.bintray.com/packages/locally/engage/core/images/download.svg?version=1.1.0) ](https://bintray.com/locally/engage/core/1.1.0/link)
 
-This document outlines the intial steps developers take to integrate the EngageSDK to an Android application. Some variation may be required.
+This document outlines the steps taken to integrate the EngageSDK to an Android application.
 
 ## Requirementes
 
   - Android Studio
   - API 19: Android 4.4 (Kitkat) or above
-  - Firebase Cloud Messaging key (for push notifications)
+  - Firebase Cloud Messaging key (for Push Notifications)
   - Locally Keys
   
 ## Installation
