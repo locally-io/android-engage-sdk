@@ -62,7 +62,10 @@ This document outlines the intial steps developers take to integrate the EngageS
 - **Login**
     
      After initializing you may log into _**Locally platform**_ using your app keys. D epending on the response from the server, this method will return the following `AuthStatus`:
-     - SUCCESS, UNAUTHORIZED, CONNECTION_ERROR, UNKNOWN_ERROR
+     - SUCCESS
+     - UNAUTHORIZED
+     - CONNECTION_ERROR
+     - UNKNOWN_ERROR
 
 ```Java
         private fun performLogin(){
