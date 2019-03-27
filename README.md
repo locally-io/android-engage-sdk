@@ -94,7 +94,7 @@ This document outlines the intial steps developers take to integrate the EngageS
 ```
 
 
->You can also **stop** monitoring by adding the following:
+     You can also **stop** monitoring by adding the following:
 
 
 ```Java
