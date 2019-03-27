@@ -84,7 +84,7 @@ This document outlines the intial steps developers take to integrate the EngageS
     
     EngageSDK provides a monitor to search for surrounding content based on your position or nearby bluetooth devices(**beacons**).
     
-    For geofences you can set up the **radius** and **refresh** interval by sending those values to the monitor. By default it scans      around 500 miles and refresh each 10 mins(in milis) 
+    For _Geofences_ you can set up the **radius** and **refresh** interval by sending those values to the monitor. By default they system scans      a radius of 500 miles, which is refreshed every 10 mins (measured in miliseconds): 
 
 ```Java
         private fun startMonitoring(){
@@ -93,7 +93,7 @@ This document outlines the intial steps developers take to integrate the EngageS
         }
 ```
 
-*       You can also stop monitoring like the following.
+*       You can also **stop** monitoring by adding the following:
         
 ```Java
         private fun stopMonitoring(){
@@ -103,7 +103,7 @@ This document outlines the intial steps developers take to integrate the EngageS
 ```
 
 - **Listen for Events**
-    To listen for events you need to do set a listener override the methods like:
+    To **listen** for events, set a listener override:
 
 ```Java
       EngageSDK.setEventListener(object: EngageSDK.EventListener {
@@ -123,7 +123,7 @@ This document outlines the intial steps developers take to integrate the EngageS
 
 - **Handling Content**
 
-    In order to handle content received you need to implement the interface **CampaignListener** which contains the method _didCampaignArrived(intent: Intent)_.
+    Content is handled by implementing the **CampaignListener** interface, which contains the method _didCampaignArrived(intent: Intent)_:
 
 ```Java
         class MainActivity : AppCompatActivity() {             
@@ -139,7 +139,7 @@ This document outlines the intial steps developers take to integrate the EngageS
 ```
 >You can just launch the value `campaign` using the default widget handler `WidgetsPresenter`:
 
->`WidgetPresenters` takes the content provided and tries to open it as an Activity if the application is on top, otherwise it sends a notification. 
+>`WidgetPresenters` takes generated content and opens it as an Activity if the application is in the foreground; When the app is in the background, content is sent as a notification. 
     
 ```Java
         private fun getContent(campaign: CampaignContent?){
@@ -149,7 +149,8 @@ This document outlines the intial steps developers take to integrate the EngageS
     
 - **Enabling push notifications**
 
-    To enable push notifications to your device, you will need to provide your Firebase token like the following. This function also provides a response if successful `true` or `false` otherwise.
+    To enable **push notifications** to your device, you will need to provide your Firebase token as shown below. 
+    When successful, this function provides a response of `true`. Otherwise, the response is `false`.
 
 >       You may need to integrate *FirebaseCloudMessaging* to retrieve your FCM token 
 
@@ -162,7 +163,7 @@ This document outlines the intial steps developers take to integrate the EngageS
         }
 ```
 
-for more info, please visit [developer web site.](https://locally.io/developers/)
+for more info, please visit our [developer web site.](https://locally.io/developers/)
 
 ## Author
 urosas@sahuarolabs.com
