@@ -1,7 +1,7 @@
 # EngageSDK
 [![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk) [ ![Download](https://api.bintray.com/packages/locally/engage/core/images/download.svg?version=1.1.0) ](https://bintray.com/locally/engage/core/1.1.0/link)
 
-This document outlines the intial steps developers must take in order to integrate the EngageSDK to an Android application. Some variation may be required.
+This document outlines the intial steps developers take to integrate the EngageSDK to an Android application. Some variation may be required.
 
 ## Requirementes
 
@@ -11,7 +11,7 @@ This document outlines the intial steps developers must take in order to integra
   - Locally Keys
   
 ## Installation
-**1.**  Open `build.gradle (module: app)` and add the following to your `dependencies {}`.
+**1.**  Open `build.gradle (module: app)` and add the following to your `dependencies {}`:
 
 
 ```groovy
@@ -33,7 +33,7 @@ This document outlines the intial steps developers must take in order to integra
         implementation 'com.google.firebase:firebase-messaging:17.3.4'
 ```
 
-**2.**  Enable the multidex at your `defaultConfig{}` like this
+**2.**  Enable the multidex at your `defaultConfig{}`:
 
 ```groovy
     defaultConfig {
@@ -46,7 +46,7 @@ This document outlines the intial steps developers must take in order to integra
 ## Usage
 - **Initialize**
 
-    This step is necessary in order to continue using the _EngageSDK_ features, make sure you initialize before any further use.
+Initialization is required in order to use the _EngageSDK_ features.
 
 ```Java
         class Activity : AppCompatActivity() {
@@ -61,7 +61,7 @@ This document outlines the intial steps developers must take in order to integra
 
 - **Login**
     
-    After initializing you may log into _**Locally platform**_ using your app keys. This method returns an `AuthStatus` depending on the response from the server (SUCCESS, UNAUTHORIZED, CONNECTION_ERROR, UNKNOWN_ERROR)
+After initializing you may log into _**Locally platform**_ using your app keys. D epending on the response from the server, this method will return the following `AuthStatus`:SUCCESS, UNAUTHORIZED, CONNECTION_ERROR, UNKNOWN_ERROR
 
 ```Java
         private fun performLogin(){
