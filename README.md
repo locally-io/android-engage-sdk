@@ -46,7 +46,7 @@ This document outlines the intial steps developers take to integrate the EngageS
 ## Usage
 - **Initialize**
 
-Initialization is required in order to use the _EngageSDK_ features.
+     Initialization is required in order to use the _EngageSDK_ features.
 
 ```Java
         class Activity : AppCompatActivity() {
@@ -61,7 +61,8 @@ Initialization is required in order to use the _EngageSDK_ features.
 
 - **Login**
     
-After initializing you may log into _**Locally platform**_ using your app keys. D epending on the response from the server, this method will return the following `AuthStatus`:SUCCESS, UNAUTHORIZED, CONNECTION_ERROR, UNKNOWN_ERROR
+     After initializing you may log into _**Locally platform**_ using your app keys. D epending on the response from the server, this method will return the following `AuthStatus`:
+     - SUCCESS, UNAUTHORIZED, CONNECTION_ERROR, UNKNOWN_ERROR
 
 ```Java
         private fun performLogin(){
