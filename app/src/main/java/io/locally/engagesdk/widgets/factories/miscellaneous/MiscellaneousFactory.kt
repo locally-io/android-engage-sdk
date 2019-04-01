@@ -5,6 +5,7 @@ import android.content.Intent
 import io.locally.engagesdk.datamodels.campaign.CampaignContent
 import io.locally.engagesdk.widgets.WidgetFactory
 import io.locally.engagesdk.widgets.factories.miscellaneous.MiscellaneousFactory.MiscellaneousLayout.B_FULL_SCREEN_IMAGE
+import io.locally.engagesdk.widgets.factories.miscellaneous.MiscellaneousFactory.MiscellaneousLayout.B_FULL_SCREEN_VIDEO
 
 object MiscellaneousFactory: WidgetFactory {
 
@@ -17,6 +18,7 @@ object MiscellaneousFactory: WidgetFactory {
     override fun widget(context: Context, content: CampaignContent): Intent? {
         return when(MiscellaneousLayout.valueOf(content.subLayout.toUpperCase())){
             B_FULL_SCREEN_IMAGE -> Intent(context, MiscellaneousImageView::class.java)
+            B_FULL_SCREEN_VIDEO -> Intent(context, MiscellaneousVideoView::class.java)
             else -> null
         }
     }
