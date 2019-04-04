@@ -46,8 +46,7 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
 ## Usage
 ### Initialize
 
-- **Test**
-
+****
      Initialization is required in order to use the _EngageSDK_ features:
 
 ```Java
