@@ -45,7 +45,7 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
 
 ## Usage
 ### Initialize
-- **Initialize**
+
 
      Initialization is required in order to use the _EngageSDK_ features:
 
@@ -60,7 +60,7 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
         }
 ```
 
-- **Login**
+### Login
     
      After initializing, you may log in to the _**Locally platform**_ using your app keys. Depending on the response from the server, this method will return the following `AuthStatus`:
      - SUCCESS
@@ -81,7 +81,7 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
         }
 ```
 
-- **Monitoring**
+### Monitoring
     
     EngageSDK provides a monitor to search for surrounding content based on your position or nearby bluetooth devices (_aka_ **beacons**).
     
@@ -105,7 +105,7 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
         }
 ```
 
-- **Listen for Events**
+### Listen for Events
     To **listen** for events, set a listener override:
 
 ```Java
@@ -124,7 +124,7 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
       })
 ```
 
-- **Handling Content**
+### Handling Content
 
     Content is handled by implementing the **CampaignListener** interface, which contains the method _didCampaignArrived(intent: Intent)_:
 
@@ -150,7 +150,7 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
         }
 ```
     
-- **Enabling push notifications**
+### Enabling Push Notifications
 
     To enable **push notifications** to your device, you will need to provide your Firebase token as shown below. 
     When successful, this function provides a response of `true`. Otherwise, the response is `false`.
