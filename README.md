@@ -83,7 +83,7 @@ After initializing, you may log in to the _**Locally platform**_ using your app 
 
 ### Monitoring
    
-EngageSDK provides a monitor to search for surrounding content based on your position or nearby bluetooth devices (_aka_ **beacons**).
+EngageSDK provides a monitor to search for surrounding content based on your position or that of nearby bluetooth devices (_aka_ **beacons**).
     
 For _Geofences_ you can set up the **radius** and **refresh** interval by sending those values to the monitor. By default they system scans      a radius of 500 miles, which is refreshed every 10 mins (measured in miliseconds): 
 
