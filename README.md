@@ -3,7 +3,7 @@
 
 This document outlines the steps taken to integrate the EngageSDK to an Android application.
 
-## Requirementes
+## Requirements
 
   - Android Studio
   - API 19: Android 4.4 (Kitkat) or above
