@@ -46,7 +46,6 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
 ## Usage
 ### Initialize
 
-
 Initialization is required in order to use the _EngageSDK_ features:
 
 ```Java
@@ -61,9 +60,9 @@ Initialization is required in order to use the _EngageSDK_ features:
 ```
 
 ### Login
-- **Test**
+
     
-     After initializing, you may log in to the _**Locally platform**_ using your app keys. Depending on the response from the server, this method will return the following `AuthStatus`:
+After initializing, you may log in to the _**Locally platform**_ using your app keys. Depending on the response from the server, this method will return the following `AuthStatus`:
      - SUCCESS
      - UNAUTHORIZED
      - CONNECTION_ERROR
@@ -83,9 +82,8 @@ Initialization is required in order to use the _EngageSDK_ features:
 ```
 
 ### Monitoring
-- **Test**
-    
-    EngageSDK provides a monitor to search for surrounding content based on your position or nearby bluetooth devices (_aka_ **beacons**).
+   
+EngageSDK provides a monitor to search for surrounding content based on your position or nearby bluetooth devices (_aka_ **beacons**).
     
     For _Geofences_ you can set up the **radius** and **refresh** interval by sending those values to the monitor. By default they system scans      a radius of 500 miles, which is refreshed every 10 mins (measured in miliseconds): 
 
@@ -108,8 +106,8 @@ Initialization is required in order to use the _EngageSDK_ features:
 ```
 
 ### Listen for Events
-- **Test**
-    To **listen** for events, set a listener override:
+
+To **listen** for events, set a listener override:
 
 ```Java
       EngageSDK.setEventListener(object: EngageSDK.EventListener {
@@ -128,9 +126,8 @@ Initialization is required in order to use the _EngageSDK_ features:
 ```
 
 ### Handling Content
-- **Test**
 
-    Content is handled by implementing the **CampaignListener** interface, which contains the method _didCampaignArrived(intent: Intent)_:
+Content is handled by implementing the **CampaignListener** interface, which contains the method _didCampaignArrived(intent: Intent)_:
 
 ```Java
         class MainActivity : AppCompatActivity() {             
@@ -155,10 +152,10 @@ Initialization is required in order to use the _EngageSDK_ features:
 ```
     
 ### Enabling Push Notifications
-- **Test**
 
-    To enable **push notifications** to your device, you will need to provide your Firebase token as shown below. 
-    When successful, this function provides a response of `true`. Otherwise, the response is `false`.
+
+To enable **push notifications** to your device, you will need to provide your Firebase token as shown below. 
+When successful, this function provides a response of `true`. Otherwise, the response is `false`.
 
 >       You may need to integrate *FirebaseCloudMessaging* to retrieve your FCM token 
 
