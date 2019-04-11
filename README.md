@@ -161,7 +161,7 @@ When successful, this function provides a response of `true`. Otherwise, the res
 
 ```Java
         private fun enablePushNotifications(){
-            EngageSDK.enablePushNotifications("YOUT FIREBASE TOKEN") { //here you can handle the response
+            EngageSDK.enablePushNotifications("YOUR FIREBASE TOKEN") { //here you can handle the response
                 if(it) System.out.println("Push notifications enabled")
                 else System.out.println("Push notification error")
             }
