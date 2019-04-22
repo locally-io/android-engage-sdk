@@ -123,15 +123,20 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
     private fun updateMonitor() {
         geofencesMonitored.clear()
         geofences.forEach { geofence ->
-            geofencesMonitored.add(Builder()
-                    .setRequestId(geofence.id.toString())
-                    .setCircularRegion(geofence.center.lat, geofence.center.lng, (geofence.center.radius * 1609.344).toFloat())
-                    .setExpirationDuration(NEVER_EXPIRE)
-                    .setTransitionTypes(GEOFENCE_TRANSITION_ENTER or GEOFENCE_TRANSITION_EXIT)
-                    .build())
+            /** If center comes correctly **/
+            try {
+                geofencesMonitored.add(Builder()
+                        .setRequestId(geofence.id.toString())
+                        .setCircularRegion(geofence.center.lat, geofence.center.lng, (geofence.center.radius * 1609.344).toFloat())
+                        .setExpirationDuration(NEVER_EXPIRE)
+                        .setTransitionTypes(GEOFENCE_TRANSITION_ENTER or GEOFENCE_TRANSITION_EXIT)
+                        .build())
+            } catch(e: Exception) {
+                println("Error to monitor geofence[${geofence.id}]: ${e.localizedMessage}")
+            }
         }
 
-        geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent)
+        if (geofencesMonitored.isNotEmpty()) geofencingClient.addGeofences(getGeofencingRequest(), geofencePendingIntent)
         locationManager.delegate = this
         locationManager.stopMonitoring()
     }
@@ -140,8 +145,12 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
         LocalBroadcastManager.getInstance(context).unregisterReceiver(geofenceResponse)
         locationManager.delegate = null
         locationManager.stopMonitoring()
-        timer.cancel()
-        timer.purge()
+        ::timer.isInitialized.apply {
+            if(this) {
+                timer.cancel()
+                timer.purge()
+            }
+        }
         geofencingClient.removeGeofences(geofencePendingIntent)
     }
 
@@ -153,7 +162,9 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
                             geofences = result.data
 
                             updateMonitor()
-                        }, { error -> error.printStackTrace() })
+                        }, { err ->
+                            println("Error getting geofences in range: ${err.localizedMessage}")
+                        })
             }
         }
     }
@@ -168,7 +179,7 @@ class GeofenceMonitor(val context: Context) : LocationDelegate {
     override fun didLocationUpdated(location: Location) {
         geofences.filter { geofence -> geofence.type == POLYGON }
                 .forEach { polygon ->
-                    val points = polygon.points?.map { point -> LatLng(point[0], point[1]) }
+                    val points = polygon.points?.map { point -> LatLng(point.lat, point.lng) }
                     PolyUtil.containsLocation(location.latitude, location.longitude, points, false).apply {
                         if(this) {
                             geofenceInside.contains(polygon.id.toString()).apply {

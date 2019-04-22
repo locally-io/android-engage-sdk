@@ -2,10 +2,10 @@ package io.locally.engagesdk.datamodels.geofences
 
 import com.google.gson.annotations.SerializedName
 
-class Geofence(@SerializedName("campaign_id") val id: Int,
+class Geofence(@SerializedName("geofence_id") val id: Int,
                @SerializedName("coverage_type") val type: CoverageType,
                val center: Center,
-               val points: List<List<Double>>? = null) {
+               val points: List<Point>? = null) {
 
     enum class CoverageType(private val value: String) : CharSequence by value {
         @SerializedName("radius") RADIUS("radius"),
@@ -15,4 +15,5 @@ class Geofence(@SerializedName("campaign_id") val id: Int,
     }
 
     class Center(val lat: Double, val lng: Double, val radius: Double)
+    class Point(val lat: Double, val lng: Double)
 }

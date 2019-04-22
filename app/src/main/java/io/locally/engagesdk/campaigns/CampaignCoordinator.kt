@@ -93,7 +93,7 @@ object CampaignCoordinator {
                                                             EventHandler.listener?.geofenceCampaignUpdate(campaign, Utils.logTime())
                                                             displayed.add(campaign.id.toString())
                                                             campaignListener?.didCampaignArrived(campaign.campaignContent)
-                                                        } else Log.i(javaClass.name, "${campaign.id} is already displayed")
+                                                        }
                                                     }
                                                 }
                                             }

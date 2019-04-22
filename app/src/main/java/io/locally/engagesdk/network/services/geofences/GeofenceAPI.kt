@@ -6,6 +6,7 @@ import io.locally.engagesdk.datamodels.geofences.GeofenceInRange
 import io.locally.engagesdk.datamodels.impression.ImpressionGeofence
 import io.locally.engagesdk.network.RestClient
 import io.reactivex.Observable
+import org.json.JSONArray
 import retrofit2.http.*
 
 interface GeofenceAPI {
@@ -14,6 +15,7 @@ interface GeofenceAPI {
     @POST("/impressions/multi-geofence.json")
     fun getGeofences(@Body impression: ImpressionGeofence): Observable<GeofenceCampaign>
 
+    @Headers("Content-Type: application/json")
     @GET("/geofences/inRange.json")
     fun inRangeGeofences(@Query("lat") lat: Double, @Query("lng") lng: Double, @Query("radius") radius: Int): Observable<GeofenceInRange>
 
