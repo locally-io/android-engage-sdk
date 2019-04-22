@@ -15,19 +15,19 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.GONE
 import android.widget.Button
+import com.google.gson.Gson
+import com.squareup.picasso.Picasso
 import io.locally.engagesdk.R
 import io.locally.engagesdk.datamodels.campaign.CampaignContent
 import io.locally.engagesdk.datamodels.campaign.CampaignContent.Content
+import io.locally.engagesdk.network.services.interactions.InteractionService
 import io.locally.engagesdk.widgets.CAMPAIGN_CONTENT
 import io.locally.engagesdk.widgets.Widget
 import io.locally.engagesdk.widgets.WidgetsPresenter
-import com.google.gson.Gson
-import com.squareup.picasso.Picasso
-import io.locally.engagesdk.network.services.interactions.InteractionService
 import kotlinx.android.synthetic.main.b_full_screen_image.*
+import java.lang.Exception
 
-class MiscellaneousImageView: Widget(){
-
+class MiscellaneousImageView : Widget() {
     lateinit var content: CampaignContent
     lateinit var context: Context
 
@@ -42,10 +42,10 @@ class MiscellaneousImageView: Widget(){
         Picasso.get().load(content.mediaImage.url).into(image)
 
         content.campaignContentButtons.isNotEmpty().apply {
-            if(this){
+            if(this) {
                 action.content(content.campaignContentButtons.first())
                 action2.content(content.campaignContentButtons.last())
-            }else {
+            } else {
                 action.visibility = GONE
                 action2.visibility = GONE
             }
@@ -64,11 +64,15 @@ class MiscellaneousImageView: Widget(){
         WidgetsPresenter.isPresentingWidget = false
     }
 
-    private fun Button.content(contentButton: Content){
-        if(contentButton.label.isNotEmpty()){
+    private fun Button.content(contentButton: Content) {
+        if(contentButton.label.isNotEmpty()) {
             this.text = contentButton.label
             val color = this.background as GradientDrawable
-            color.setColor(Color.parseColor(contentButton.color))
+            contentButton.color.isNotEmpty().apply {
+                try {
+                    if(this) color.setColor(Color.parseColor(contentButton.color))
+                }catch(e: Exception) { e.printStackTrace() }
+            }
 
             when(contentButton.action) {
                 "OPEN_URL" -> {
@@ -92,10 +96,10 @@ class MiscellaneousImageView: Widget(){
                     }
                 }
             }
-        }else this.visibility = GONE
+        } else this.visibility = GONE
     }
 
-    private class OnSwipeTouchListener(context: Activity): View.OnTouchListener {
+    private class OnSwipeTouchListener(context: Activity) : View.OnTouchListener {
         private var gestureDetector: GestureDetector
 
         init {
@@ -106,7 +110,7 @@ class MiscellaneousImageView: Widget(){
             return gestureDetector.onTouchEvent(event)
         }
 
-        private class GestureListener(val context: Activity): GestureDetector.SimpleOnGestureListener() {
+        private class GestureListener(val context: Activity) : GestureDetector.SimpleOnGestureListener() {
             private val SWIPE_THRESHOLD = 100
             private val SWIPE_VELOCITY_THRESHOLD = 100
 
@@ -116,7 +120,7 @@ class MiscellaneousImageView: Widget(){
                 val diffX: Float? = end?.x?.let { start?.x?.minus(it) }
 
                 diffX?.let {
-                    if(Math.abs(it) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD){
+                    if(Math.abs(it) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         if(it < 0) context.finish()
                     }
 
