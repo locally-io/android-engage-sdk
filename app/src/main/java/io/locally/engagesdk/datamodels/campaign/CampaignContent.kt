@@ -1,5 +1,6 @@
 package io.locally.engagesdk.datamodels.campaign
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 import java.util.Date
 
@@ -23,11 +24,12 @@ class CampaignContent(var id: Int,
                       val mediaVideo: MediaVideo,
                       val mediaImage: MediaImage,
                       var campaign: String? = null,
+                      @SerializedName("qr_code_image_url") val qrImage: String?,
                       var impression: String? = null): Serializable {
 
     enum class Layout(private val value: String): CharSequence by value {
         RETAIL("retail"),
-        COUPON("coupon"),
+        COUPONS("coupons"),
         MISC("misc"),
         SURVEY("survey");
 
