@@ -16,6 +16,7 @@
 
         <activity android:name=".widgets.factories.miscellaneous.MiscellaneousImageView" android:theme="@style/dialogTheme"/>
         <activity android:name=".widgets.factories.miscellaneous.MiscellaneousVideoView" android:theme="@style/dialogTheme" android:screenOrientation="userLandscape"/>
+        <activity android:name=".widgets.factories.coupons.CouponView" android:theme="@style/dialogTheme" android:screenOrientation="userPortrait"/>
 
         <service android:name="com.kontakt.sdk.android.ble.service.ProximityService" android:exported="false"/>
         <service android:name=".notifications.NotificationService">

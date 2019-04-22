@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import io.locally.engagesdk.datamodels.campaign.CampaignContent
 import io.locally.engagesdk.datamodels.campaign.CampaignContent.Layout.*
+import io.locally.engagesdk.widgets.factories.coupons.CouponsFactory
 import io.locally.engagesdk.widgets.factories.miscellaneous.MiscellaneousFactory
 
 class WidgetsAbstractFactory {
@@ -12,7 +13,7 @@ class WidgetsAbstractFactory {
         fun widget(context: Context, content: CampaignContent): Intent? {
             return when(content.layout){
                 MISC -> MiscellaneousFactory.widget(context, content)
-                COUPON -> null
+                COUPONS -> CouponsFactory.widget(context, content)
                 SURVEY -> null
                 RETAIL -> null
             }
