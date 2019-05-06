@@ -1,5 +1,5 @@
 # EngageSDK
-[![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk) [ ![Download](https://api.bintray.com/packages/locally/engage/core/images/download.svg?version=1.2.0) ](https://bintray.com/locally/engage/core/1.2.0/link)
+[![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk) [ ![Download](https://api.bintray.com/packages/locally/engage/core/images/download.svg?version=1.3.0) ](https://bintray.com/locally/engage/core/1.3.0/link)
 
 This document outlines the steps taken to integrate the EngageSDK to an Android application.
 
@@ -16,7 +16,7 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
 
 ```groovy
         //library
-        implementation 'io.locally:engage-core:1.2.0'
+        implementation 'io.locally:engage-core:1.3.0'
         //Android 9 or above
         implementation 'commons-logging:commons-logging:1.1.1'
         //Locations
