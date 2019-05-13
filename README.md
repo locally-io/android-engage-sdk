@@ -16,7 +16,7 @@ This document outlines the steps taken to integrate the EngageSDK to an Android 
 
 ```groovy
         //library
-        implementation 'io.locally:engage-core:1.3.0'
+        implementation 'io.locally:engage-core:1.3.1'
         //Android 9 or above
         implementation 'commons-logging:commons-logging:1.1.1'
         //Locations
