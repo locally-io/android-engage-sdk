@@ -30,6 +30,7 @@ class CampaignContent(var id: Int,
     enum class Layout(private val value: String): CharSequence by value {
         RETAIL("retail"),
         COUPONS("coupons"),
+        PUSH_NOTIFICATION("push_notification"),
         MISC("misc"),
         SURVEY("survey");
 
@@ -40,6 +41,8 @@ class CampaignContent(var id: Int,
                      val submit: String,
                      val backgroundGradientTop: String,
                      val backgroundGradientBottom: String,
+                     @SerializedName("push_message") val pushMessage: String,
+                     val link: String,
                      val textColor: String)
 
     class Content(val id: Int,

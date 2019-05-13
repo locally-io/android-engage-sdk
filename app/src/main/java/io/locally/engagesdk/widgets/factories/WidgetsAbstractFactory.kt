@@ -14,8 +14,7 @@ class WidgetsAbstractFactory {
             return when(content.layout){
                 MISC -> MiscellaneousFactory.widget(context, content)
                 COUPONS -> CouponsFactory.widget(context, content)
-                SURVEY -> null
-                RETAIL -> null
+                else -> null
             }
         }
     }
