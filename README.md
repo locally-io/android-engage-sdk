@@ -1,5 +1,5 @@
 # EngageSDK
-[![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk) [ ![Download](https://api.bintray.com/packages/locally/engage/core/images/download.svg?version=1.3.1) ](https://bintray.com/locally/engage/core/1.3.1/link)
+[![Build Status](https://travis-ci.org/locally-io/android-engage-sdk.svg?branch=master)](https://travis-ci.org/locally-io/android-engage-sdk) ![GitHub](https://img.shields.io/github/license/locally-io/android-engage-sdk.svg) [ ![Download](https://api.bintray.com/packages/locally/engage/core/images/download.svg?version=1.3.1) ](https://bintray.com/locally/engage/core/1.3.1/link)
 
 This document outlines the steps taken to integrate the EngageSDK to an Android application.
 
